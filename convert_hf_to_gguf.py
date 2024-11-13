@@ -2830,6 +2830,24 @@ class Gemma2Model(Model):
         return [(self.map_tensor_name(name), data_torch)]
 
 
+@Model.register("MobileLLMForCausalLM")
+class MobileLLMModel(Model):
+    model_arch = gguf.MODEL_ARCH.MOBILELLM
+
+    def set_gguf_parameters(self):
+        hparams = self.hparams
+
+        self.gguf_writer.add_context_length(hparams["max_position_embeddings"])
+        self.gguf_writer.add_block_count(hparams["num_hidden_layers"])
+        self.gguf_writer.add_embedding_length(hparams["hidden_size"])
+        self.gguf_writer.add_feed_forward_length(hparams["intermediate_size"])
+        self.gguf_writer.add_head_count(hparams["num_attention_heads"])
+        self.gguf_writer.add_file_type(hparams)
+
+    def modify_tensors(self, data_torch: Tensor, name: str, bid: int | None) -> Iterable[tuple[str, Tensor]]:
+        return [(self.map_tensor_name(name), data_torch)]
+
+
 @Model.register("Starcoder2ForCausalLM")
 class StarCoder2Model(Model):
     model_arch = gguf.MODEL_ARCH.STARCODER2

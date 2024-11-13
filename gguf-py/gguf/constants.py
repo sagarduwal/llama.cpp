@@ -257,6 +257,7 @@ class MODEL_ARCH(IntEnum):
     GRANITE      = auto()
     GRANITE_MOE  = auto()
     CHAMELEON    = auto()
+    MOBILELLM    = auto()
 
 
 class MODEL_TENSOR(IntEnum):
